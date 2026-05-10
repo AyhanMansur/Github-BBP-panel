@@ -1,1 +1,21 @@
+name: Start Proxy Tunnel
 
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'   # every 6 hours
+
+jobs:
+  proxy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install gost
+        run: |
+          curl -L https://github.com/ginuerzh/gost/releases/download/v2.11.5/gost-linux-amd64-2.11.5.gz | gunzip > gost
+          chmod +x gost
+
+      - name: Run proxy
+        run: |
+          ./gost -L=:8080 &
+          echo "Proxy is running on port 8080"
+          sleep 21600   # keep runner alive for 6 hours
